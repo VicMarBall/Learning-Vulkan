@@ -76,10 +76,6 @@ private:
 
 		createInfo.enabledLayerCount = 0;
 
-		if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
-			throw std::runtime_error("Failed to create vkInstance");
-		}
-
 		// EXTENSIONS SUPPORT / AVAILABLE EXTENSIONS
 		uint32_t extensionCount = 0;
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -102,7 +98,7 @@ private:
 					break;
 				}
 			}
-			
+
 			if (!isAvailable) {
 				areRequiredExtensionsAvailable = false;
 				break;
@@ -110,13 +106,20 @@ private:
 		}
 
 		if (areRequiredExtensionsAvailable) {
-			std::cout << "All Required Extensions are Available!";
+			std::cout << "All Required Extensions are Available! \n";
 			std::cout << std::endl;
 
 		}
 		else {
 			throw std::runtime_error("Some Required Extension is not Available");
 		}
+
+		// CREATE THE INSTANCE
+		if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+			throw std::runtime_error("Failed to create vkInstance");
+		}
+		std::cout << "VkInstance Created Successfully! \n";
+		std::cout << std::endl;
 	}
 
 	void mainLoop() {
