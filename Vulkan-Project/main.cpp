@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <fstream>
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+const uint32_t INIT_WIDTH = 800;
+const uint32_t INIT_HEIGHT = 600;
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -88,7 +88,7 @@ private:
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // because is not OpenGL
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+		window = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, "Vulkan", nullptr, nullptr);
 		glfwSetWindowUserPointer(window, this);
 		glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 	}
