@@ -16,6 +16,8 @@
 #include <array>
 #include <chrono>
 
+#include "camera.h"
+
 const uint32_t INIT_WIDTH = 800;
 const uint32_t INIT_HEIGHT = 600;
 
@@ -1328,8 +1330,10 @@ private:
 
 		UniformBufferObject ubo;
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		//glm::mat4 cameraMatrix = camera.getTransformationMatrix();
+		//ubo.view = glm::lookAt(camera.position, camera.position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
 		ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+		ubo.proj = glm::perspective(glm::radians(camera.fov), swapChainExtent.width / (float)swapChainExtent.height, camera.zNear, camera.zFar);
 		ubo.proj[1][1] *= -1;
 
 		memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
@@ -1525,4 +1529,6 @@ private:
 	uint32_t currentFrame = 0;
 
 	bool framebufferResized = false;
+
+	Camera camera;
 };
