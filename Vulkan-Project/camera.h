@@ -20,9 +20,4 @@ struct Camera {
 			* glm::mat4_cast(glm::quat(glm::radians(rotation)))
 			* glm::scale(glm::mat4(1.0f), scale);
 	}
-
-	glm::mat4 getViewMatrix() {
-		glm::mat4 cameraMatrix = getTransformationMatrix();
-		return glm::lookAt(position, position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
-	}
 };
