@@ -17,6 +17,7 @@
 #include <chrono>
 
 #include "camera.h"
+#include "input.h"
 
 const uint32_t INIT_WIDTH = 800;
 const uint32_t INIT_HEIGHT = 600;
@@ -155,11 +156,66 @@ private:
 		window = glfwCreateWindow(INIT_WIDTH, INIT_HEIGHT, "Vulkan", nullptr, nullptr);
 		glfwSetWindowUserPointer(window, this);
 		glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+		glfwSetKeyCallback(window, keyInputCallback);
 	}
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 		auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
 		app->framebufferResized = true;
+	}
+
+	static void keyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+		auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
+
+		switch (key) {
+
+		case GLFW_KEY_0: key = KEY_0; break;
+		case GLFW_KEY_1: key = KEY_1; break;
+		case GLFW_KEY_2: key = KEY_2; break;
+		case GLFW_KEY_3: key = KEY_3; break;
+		case GLFW_KEY_4: key = KEY_4; break;
+		case GLFW_KEY_5: key = KEY_5; break;
+		case GLFW_KEY_6: key = KEY_6; break;
+		case GLFW_KEY_7: key = KEY_7; break;
+		case GLFW_KEY_8: key = KEY_8; break;
+		case GLFW_KEY_9: key = KEY_9; break;
+
+		case GLFW_KEY_A: key = KEY_A; break;
+		case GLFW_KEY_B: key = KEY_B; break;
+		case GLFW_KEY_C: key = KEY_C; break;
+		case GLFW_KEY_D: key = KEY_D; break;
+		case GLFW_KEY_E: key = KEY_E; break;
+		case GLFW_KEY_F: key = KEY_F; break;
+		case GLFW_KEY_G: key = KEY_G; break;
+		case GLFW_KEY_H: key = KEY_H; break;
+		case GLFW_KEY_I: key = KEY_I; break;
+		case GLFW_KEY_J: key = KEY_J; break;
+		case GLFW_KEY_K: key = KEY_K; break;
+		case GLFW_KEY_L: key = KEY_L; break;
+		case GLFW_KEY_M: key = KEY_M; break;
+		case GLFW_KEY_N: key = KEY_N; break;
+		case GLFW_KEY_O: key = KEY_O; break;
+		case GLFW_KEY_P: key = KEY_P; break;
+		case GLFW_KEY_Q: key = KEY_Q; break;
+		case GLFW_KEY_R: key = KEY_R; break;
+		case GLFW_KEY_S: key = KEY_S; break;
+		case GLFW_KEY_T: key = KEY_T; break;
+		case GLFW_KEY_U: key = KEY_U; break;
+		case GLFW_KEY_V: key = KEY_V; break;
+		case GLFW_KEY_W: key = KEY_W; break;
+		case GLFW_KEY_X: key = KEY_X; break;
+		case GLFW_KEY_Y: key = KEY_Y; break;
+		case GLFW_KEY_Z: key = KEY_Z; break;
+
+		default: return; // key is not mapped in input? skip the rest
+		}
+
+		switch (action)
+		{
+		case GLFW_PRESS:	app->input.keys[key] = KEY_PRESS; break;
+		case GLFW_RELEASE:	app->input.keys[key] = KEY_RELEASE; break;
+		default: break;
+		}
 	}
 
 	void initVulkan() {
@@ -1315,7 +1371,9 @@ private:
 
 	void mainLoop() {
 		while (!glfwWindowShouldClose(window)) {
+			input.preUpdate();
 			glfwPollEvents();
+			gameLogic();
 			drawFrame();
 		}
 
@@ -1332,11 +1390,27 @@ private:
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		//glm::mat4 cameraMatrix = camera.getTransformationMatrix();
 		//ubo.view = glm::lookAt(camera.position, camera.position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
-		ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view = glm::lookAt(camera.position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.proj = glm::perspective(glm::radians(camera.fov), swapChainExtent.width / (float)swapChainExtent.height, camera.zNear, camera.zFar);
 		ubo.proj[1][1] *= -1;
 
 		memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
+	}
+
+	void gameLogic() {
+		if (input.getKeyDown(KEY_W)) {
+			camera.position += glm::vec3(0.0f, 0.0f, 0.01f);
+		}
+		if (input.getKeyDown(KEY_S)) {
+			camera.position += glm::vec3(0.0f, 0.0f, -0.01f);
+		}
+		if (input.getKeyDown(KEY_A)) {
+			camera.position += glm::vec3(0.01f, 0.0f, 0.0f);
+		}
+		if (input.getKeyDown(KEY_D)) {
+			camera.position += glm::vec3(-0.01f, 0.0f, 0.0f);
+		}
+
 	}
 
 	void drawFrame() {
@@ -1531,4 +1605,5 @@ private:
 	bool framebufferResized = false;
 
 	Camera camera;
+	Input input;
 };
