@@ -45,7 +45,14 @@ enum Key {
 	MAX_KEYS
 };
 
-enum KeyState {
+enum MouseButton {
+	MOUSE_LEFT,
+	MOUSE_RIGHT,
+
+	MAX_BUTTONS
+};
+
+enum InputState {
 	KEY_IDLE,
 	KEY_PRESS,
 	KEY_DOWN,
@@ -53,7 +60,10 @@ enum KeyState {
 };
 
 struct Input {
-	std::array<KeyState, Key::MAX_KEYS> keys;
+	std::array<InputState, Key::MAX_KEYS> keys;
+
+	glm::vec2 mousePosition;
+	std::array<InputState, MouseButton::MAX_BUTTONS> mouseButtons;
 
 	bool getKeyDown(Key key) {
 		return keys[key] == KEY_PRESS || keys[key] == KEY_DOWN;
@@ -65,6 +75,10 @@ struct Input {
 
 	bool getKeyRelease(Key key) {
 		return keys[key] == KEY_RELEASE;
+	}
+
+	bool getMouseButtonDown(MouseButton button) {
+		return mouseButtons[button] == KEY_PRESS || mouseButtons[button] == KEY_DOWN;
 	}
 
 	void updateKey(int key, int action) {
@@ -119,7 +133,28 @@ struct Input {
 		case GLFW_RELEASE:	keys[key] = KEY_RELEASE; break;
 		default: break;
 		}
+	}
 
+	void updateMousePosition(double x, double y) {
+		mousePosition.x = x;
+		mousePosition.y = y;
+	}
+
+	void updateMouseButtons(int button, int action) {
+		switch (button) {
+
+		case GLFW_MOUSE_BUTTON_LEFT: button = MOUSE_LEFT; break;
+		case GLFW_MOUSE_BUTTON_RIGHT: button = MOUSE_RIGHT; break;
+
+		default: return; // key is not mapped in input? skip the rest
+		}
+
+		switch (action)
+		{
+		case GLFW_PRESS:	mouseButtons[button] = KEY_PRESS; break;
+		case GLFW_RELEASE:	mouseButtons[button] = KEY_RELEASE; break;
+		default: break;
+		}
 	}
 
 	void preUpdate() {
@@ -128,6 +163,15 @@ struct Input {
 			{
 			case KEY_PRESS:		key = KEY_DOWN; break;
 			case KEY_RELEASE:	key = KEY_IDLE; break;
+			default: break;
+			}
+		}
+
+		for (auto& button : mouseButtons) {
+			switch (button)
+			{
+			case KEY_PRESS:		button = KEY_DOWN; break;
+			case KEY_RELEASE:	button = KEY_IDLE; break;
 			default: break;
 			}
 		}

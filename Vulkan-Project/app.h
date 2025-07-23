@@ -174,6 +174,8 @@ private:
 		glfwSetWindowUserPointer(window, this);
 		glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 		glfwSetKeyCallback(window, keyInputCallback);
+		glfwSetCursorPosCallback(window, cursorPosInputCallback);
+		glfwSetMouseButtonCallback(window, mouseButtonInputCallback);
 	}
 
 	static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
@@ -185,6 +187,18 @@ private:
 		auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
 
 		app->input.updateKey(key, action);
+	}
+
+	static void cursorPosInputCallback(GLFWwindow* window, double xpos, double ypos) {
+		auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
+
+		app->input.updateMousePosition(xpos, ypos);
+	}
+
+	static void mouseButtonInputCallback(GLFWwindow* window, int button, int action, int mods) {
+		auto app = reinterpret_cast<HelloTriangleApplication*>(glfwGetWindowUserPointer(window));
+
+		app->input.updateMouseButtons(button, action);
 	}
 
 	void initVulkan() {
@@ -1724,6 +1738,9 @@ private:
 			camera.position += glm::vec3(-1.0f, 0.0f, 0.0f) * cameraSpeed;
 		}
 
+		if (input.getMouseButtonDown(MOUSE_LEFT)) {
+
+		}
 	}
 
 	void drawFrame() {
