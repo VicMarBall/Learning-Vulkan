@@ -63,6 +63,7 @@ struct Input {
 	std::array<InputState, Key::MAX_KEYS> keys;
 
 	glm::vec2 mousePosition;
+	glm::vec2 mousePreviousPosition;
 	std::array<InputState, MouseButton::MAX_BUTTONS> mouseButtons;
 
 	bool getKeyDown(Key key) {
@@ -79,6 +80,10 @@ struct Input {
 
 	bool getMouseButtonDown(MouseButton button) {
 		return mouseButtons[button] == KEY_PRESS || mouseButtons[button] == KEY_DOWN;
+	}
+
+	glm::vec2 getMouseMovement() {
+		return mousePreviousPosition - mousePosition;
 	}
 
 	void updateKey(int key, int action) {
@@ -175,5 +180,7 @@ struct Input {
 			default: break;
 			}
 		}
+
+		mousePreviousPosition = mousePosition;
 	}
 };

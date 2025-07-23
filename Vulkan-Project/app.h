@@ -1713,9 +1713,9 @@ private:
 
 		UniformBufferObject ubo;
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		//glm::mat4 cameraMatrix = camera.getTransformationMatrix();
-		//ubo.view = glm::lookAt(camera.position, camera.position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
-		ubo.view = glm::lookAt(camera.position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 cameraMatrix = camera.getTransformationMatrix();
+		ubo.view = glm::lookAt(camera.position, camera.position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
+		//ubo.view = glm::lookAt(camera.position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.proj = glm::perspective(glm::radians(camera.fov), swapChainExtent.width / (float)swapChainExtent.height, camera.zNear, camera.zFar);
 		ubo.proj[1][1] *= -1;
 
@@ -1738,8 +1738,12 @@ private:
 			camera.position += glm::vec3(-1.0f, 0.0f, 0.0f) * cameraSpeed;
 		}
 
+		float rotationSpeed = 0.1f;
+		glm::vec2 mouseMovement = input.getMouseMovement();
 		if (input.getMouseButtonDown(MOUSE_LEFT)) {
+			std::cout << "Mouse Movement: " << "{ x = " << mouseMovement.x << ", y = " << mouseMovement.y << " }" << std::endl;
 
+			camera.rotation += glm::vec3(mouseMovement.y, mouseMovement.x, 0) * rotationSpeed;
 		}
 	}
 
