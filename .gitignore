@@ -416,3 +416,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+!Vulkan-Project/meshes/*
+!Vulkan-Project/shaders/*
+!Vulkan-Project/textures/*

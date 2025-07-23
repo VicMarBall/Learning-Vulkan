@@ -41,6 +41,8 @@ enum Key {
 	KEY_Z,
 
 	KEY_SPACE,
+	KEY_LSHIFT,
+	KEY_RSHIFT,
 
 	MAX_KEYS
 };
@@ -128,6 +130,8 @@ struct Input {
 		case GLFW_KEY_Z: key = KEY_Z; break;
 
 		case GLFW_KEY_SPACE: key = KEY_SPACE; break;
+		case GLFW_KEY_LEFT_SHIFT: key = KEY_LSHIFT; break;
+		case GLFW_KEY_RIGHT_SHIFT: key = KEY_RSHIFT; break;
 
 		default: return; // key is not mapped in input? skip the rest
 		}

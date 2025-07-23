@@ -35,8 +35,8 @@ const uint32_t INIT_HEIGHT = 600;
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
-const std::string MODEL_PATH = "meshes/viking_room.obj";
-const std::string TEXTURE_PATH = "textures/viking_room.png";
+const std::string MODEL_PATH = "meshes/tralalero_tralala.obj";
+const std::string TEXTURE_PATH = "textures/tralalero_tralala.png";
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -1765,8 +1765,8 @@ private:
 		UniformBufferObject ubo;
 		ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		glm::mat4 cameraMatrix = camera.getTransformationMatrix();
-		//ubo.view = glm::lookAt(camera.position, camera.position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
-		ubo.view = glm::lookAt(camera.position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		ubo.view = glm::lookAt(camera.position, camera.position + glm::vec3(cameraMatrix[2]), glm::vec3(cameraMatrix[1]));
+		//ubo.view = glm::lookAt(camera.position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		ubo.proj = glm::perspective(glm::radians(camera.fov), swapChainExtent.width / (float)swapChainExtent.height, camera.zNear, camera.zFar);
 		ubo.proj[1][1] *= -1;
 
@@ -1776,17 +1776,25 @@ private:
 	void gameLogic() {
 		float cameraSpeed = 0.001f;
 
+		glm::mat4 cameraMatrix = camera.getTransformationMatrix();
+
 		if (input.getKeyDown(KEY_W)) {
-			camera.position += glm::vec3(0.0f, 0.0f, 1.0f) * cameraSpeed;
+			camera.position += glm::vec3(cameraMatrix[2]) * cameraSpeed;
 		}
 		if (input.getKeyDown(KEY_S)) {
-			camera.position += glm::vec3(0.0f, 0.0f, -1.0f) * cameraSpeed;
+			camera.position += glm::vec3(-cameraMatrix[2]) * cameraSpeed;
 		}
 		if (input.getKeyDown(KEY_A)) {
-			camera.position += glm::vec3(1.0f, 0.0f, 0.0f) * cameraSpeed;
+			camera.position += glm::vec3(cameraMatrix[0]) * cameraSpeed;
 		}
 		if (input.getKeyDown(KEY_D)) {
-			camera.position += glm::vec3(-1.0f, 0.0f, 0.0f) * cameraSpeed;
+			camera.position += glm::vec3(-cameraMatrix[0]) * cameraSpeed;
+		}
+		if (input.getKeyDown(KEY_SPACE)) {
+			camera.position += glm::vec3(cameraMatrix[1]) * cameraSpeed;
+		}
+		if (input.getKeyDown(KEY_LSHIFT) || input.getKeyDown(KEY_RSHIFT)) {
+			camera.position += glm::vec3(-cameraMatrix[1]) * cameraSpeed;
 		}
 
 		float rotationSpeed = 0.1f;
@@ -1794,7 +1802,10 @@ private:
 		if (input.getMouseButtonDown(MOUSE_LEFT)) {
 			//std::cout << "Mouse Movement: " << "{ x = " << mouseMovement.x << ", y = " << mouseMovement.y << " }" << std::endl;
 
-			camera.rotation += glm::vec3(mouseMovement.y, mouseMovement.x, 0) * rotationSpeed;
+			glm::vec3 cameraRotation = 
+				(mouseMovement.x * glm::vec3(0.0f, 1.0f, 0.0f)) + 
+				(mouseMovement.y * glm::vec3(1.0f, 0.0f, 0.0f));
+			camera.rotation += cameraRotation * rotationSpeed;
 		}
 	}
 
