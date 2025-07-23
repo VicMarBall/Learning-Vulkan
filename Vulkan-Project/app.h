@@ -1741,7 +1741,7 @@ private:
 		float rotationSpeed = 0.1f;
 		glm::vec2 mouseMovement = input.getMouseMovement();
 		if (input.getMouseButtonDown(MOUSE_LEFT)) {
-			std::cout << "Mouse Movement: " << "{ x = " << mouseMovement.x << ", y = " << mouseMovement.y << " }" << std::endl;
+			//std::cout << "Mouse Movement: " << "{ x = " << mouseMovement.x << ", y = " << mouseMovement.y << " }" << std::endl;
 
 			camera.rotation += glm::vec3(mouseMovement.y, mouseMovement.x, 0) * rotationSpeed;
 		}
