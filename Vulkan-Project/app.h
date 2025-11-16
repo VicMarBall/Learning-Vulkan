@@ -1950,7 +1950,7 @@ private:
 			//std::cout << "Mouse Movement: " << "{ x = " << mouseMovement.x << ", y = " << mouseMovement.y << " }" << std::endl;
 
 			glm::vec3 cameraRotation = 
-				(mouseMovement.x * glm::vec3(0.0f, 1.0f, 0.0f)) + 
+				(mouseMovement.x * glm::vec3(0.0f, 0.0f, -1.0f)) + 
 				(mouseMovement.y * glm::vec3(1.0f, 0.0f, 0.0f));
 			camera.rotation += cameraRotation * rotationSpeed;
 		}
